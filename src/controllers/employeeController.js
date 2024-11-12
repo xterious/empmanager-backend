@@ -12,13 +12,16 @@ const createEmployee = async (req, res) => {
       !employee.img
     )
       return res.status(400).json({ message: "All fields are required" });
+    const courses = Array.isArray(employee.course)
+      ? employee.course
+      : [employee.course];
     const newEmployee = await Employee.create({
       name: employee.name,
       email: employee.email,
       mobile: employee.mobile,
       designation: employee.designation,
       gender: employee.gender,
-      course: employee.course,
+      course: courses,
       img: employee.img,
       enabled: true,
       createdAt: Date.now(),
@@ -50,15 +53,22 @@ const getEmployee = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   try {
-    await Employee.findByIdAndUpdate(req.params.id, {
-      name: req.body.name,
-      email: req.body.email,
-      mobile: req.body.mobile,
-      designation: req.body.designation,
-      gender: req.body.gender,
-      course: req.body.course,
-      img: req.body.img,
-    });
+    const courses = Array.isArray(req.body.course)
+      ? req.body.course
+      : [req.body.course];
+    await Employee.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        designation: req.body.designation,
+        gender: req.body.gender,
+        course: courses,
+        img: req.body.img,
+      },
+      { new: true }
+    );
     return res
       .status(200)
       .json({ status: "Success", message: "Updated successfully" });
@@ -79,16 +89,6 @@ const deleteEmployee = async (req, res) => {
   }
 };
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Enables an employee by setting their 'enabled' status to true.
- * 
- * @param {Object} req - The request object, containing the employee ID in params.
- * @param {Object} res - The response object, used to send JSON response back to the client.
- * @returns {Object} - Returns the updated employee object as a JSON response.
- * @throws {Object} - Returns a 500 status with an error message if an exception occurs.
- */
-/******  9dbacf57-55ab-4388-8ec3-da980d872c31  *******/
 const enableEmployee = async (req, res) => {
   try {
     const employee = await Employee.findById(req.params.id);

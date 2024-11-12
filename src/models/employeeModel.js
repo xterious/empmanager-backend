@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
       match: /.+\@.+\..+/,
       unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
     },
     mobile: {
       type: String,
@@ -19,15 +19,13 @@ const employeeSchema = new mongoose.Schema(
     },
     designation: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
       required: true,
     },
     course: {
-      type: String,
-      required: true,
+      type: Array,
     },
     img: {
       type: String,
